@@ -17,8 +17,10 @@ class PedidoStateTest {
         pedido = new Pedido(produto);
     }
 
+    // ESTADO: Criado
+
     @Test
-    void pedidoDeveIniciarComEstadoCriado() {
+    void estadoCriadoDeveSerEstadoInicial() {
         assertTrue(pedido.getEstado() instanceof PedidoCriadoState);
     }
 
@@ -37,71 +39,126 @@ class PedidoStateTest {
     }
 
     @Test
-    void estadoCriadoNaoDevePermitirEnviarOuEntregar() {
+    void estadoCriadoNaoDevePermitirEnviar() {
         assertFalse(pedido.getEstado().enviar(pedido));
-        assertFalse(pedido.getEstado().entregar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoCriadoState);
     }
 
     @Test
-    void estadoPreparadoDevePermitirEnviarOuCancelar() {
-        pedido.setEstado(PedidoPreparadoState.getInstance());
+    void estadoCriadoNaoDevePermitirEntregar() {
+        assertFalse(pedido.getEstado().entregar(pedido));
+        assertTrue(pedido.getEstado() instanceof PedidoCriadoState);
+    }
 
+    // ESTADO: Preparado
+
+    @Test
+    void estadoPreparadoDevePermitirEnviar() {
+        pedido.setEstado(PedidoPreparadoState.getInstance());
         assertTrue(pedido.getEstado().enviar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoEnviadoState);
+    }
 
+    @Test
+    void estadoPreparadoDevePermitirCancelar() {
         pedido.setEstado(PedidoPreparadoState.getInstance());
         assertTrue(pedido.getEstado().cancelar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoCanceladoState);
     }
 
     @Test
-    void estadoPreparadoNaoDevePermitirPrepararOuEntregar() {
+    void estadoPreparadoNaoDevePermitirPreparar() {
         pedido.setEstado(PedidoPreparadoState.getInstance());
-
         assertFalse(pedido.getEstado().preparar(pedido));
-        assertFalse(pedido.getEstado().entregar(pedido));
     }
 
     @Test
-    void estadoEnviadoDevePermitirEntregarOuCancelar() {
-        pedido.setEstado(PedidoEnviadoState.getInstance());
+    void estadoPreparadoNaoDevePermitirEntregar() {
+        pedido.setEstado(PedidoPreparadoState.getInstance());
+        assertFalse(pedido.getEstado().entregar(pedido));
+    }
 
+    // ESTADO: Enviado
+
+    @Test
+    void estadoEnviadoDevePermitirEntregar() {
+        pedido.setEstado(PedidoEnviadoState.getInstance());
         assertTrue(pedido.getEstado().entregar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoEntregueState);
+    }
 
+    @Test
+    void estadoEnviadoDevePermitirCancelar() {
         pedido.setEstado(PedidoEnviadoState.getInstance());
         assertTrue(pedido.getEstado().cancelar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoCanceladoState);
     }
 
     @Test
-    void estadoEnviadoNaoDevePermitirPrepararOuEnviar() {
+    void estadoEnviadoNaoDevePermitirPreparar() {
         pedido.setEstado(PedidoEnviadoState.getInstance());
-
         assertFalse(pedido.getEstado().preparar(pedido));
-        assertFalse(pedido.getEstado().enviar(pedido));
     }
 
     @Test
-    void estadoEntregueNaoDevePermitirQualquerAcao() {
+    void estadoEnviadoNaoDevePermitirEnviar() {
+        pedido.setEstado(PedidoEnviadoState.getInstance());
+        assertFalse(pedido.getEstado().enviar(pedido));
+    }
+
+    // ESTADO: Entregue
+
+    @Test
+    void estadoEntregueNaoDevePermitirPreparar() {
         pedido.setEstado(PedidoEntregueState.getInstance());
-
         assertFalse(pedido.getEstado().preparar(pedido));
-        assertFalse(pedido.getEstado().enviar(pedido));
-        assertFalse(pedido.getEstado().entregar(pedido));
-        assertFalse(pedido.getEstado().cancelar(pedido));
     }
 
     @Test
-    void estadoCanceladoNaoDevePermitirQualquerAcao() {
-        pedido.setEstado(PedidoCanceladoState.getInstance());
-
-        assertFalse(pedido.getEstado().preparar(pedido));
+    void estadoEntregueNaoDevePermitirEnviar() {
+        pedido.setEstado(PedidoEntregueState.getInstance());
         assertFalse(pedido.getEstado().enviar(pedido));
+    }
+
+    @Test
+    void estadoEntregueNaoDevePermitirEntregar() {
+        pedido.setEstado(PedidoEntregueState.getInstance());
         assertFalse(pedido.getEstado().entregar(pedido));
+    }
+
+    @Test
+    void estadoEntregueNaoDevePermitirCancelar() {
+        pedido.setEstado(PedidoEntregueState.getInstance());
         assertFalse(pedido.getEstado().cancelar(pedido));
     }
+
+    // ESTADO: Cancelado
+
+    @Test
+    void estadoCanceladoNaoDevePermitirPreparar() {
+        pedido.setEstado(PedidoCanceladoState.getInstance());
+        assertFalse(pedido.getEstado().preparar(pedido));
+    }
+
+    @Test
+    void estadoCanceladoNaoDevePermitirEnviar() {
+        pedido.setEstado(PedidoCanceladoState.getInstance());
+        assertFalse(pedido.getEstado().enviar(pedido));
+    }
+
+    @Test
+    void estadoCanceladoNaoDevePermitirEntregar() {
+        pedido.setEstado(PedidoCanceladoState.getInstance());
+        assertFalse(pedido.getEstado().entregar(pedido));
+    }
+
+    @Test
+    void estadoCanceladoNaoDevePermitirCancelar() {
+        pedido.setEstado(PedidoCanceladoState.getInstance());
+        assertFalse(pedido.getEstado().cancelar(pedido));
+    }
+
+    // NOMES DOS ESTADOS
 
     @Test
     void deveRetornarNomeCorretoDosEstados() {
