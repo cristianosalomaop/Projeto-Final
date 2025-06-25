@@ -50,7 +50,7 @@ class PedidoStateTest {
         assertTrue(pedido.getEstado().enviar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoEnviadoState);
 
-        pedido.setEstado(PedidoPreparadoState.getInstance()); // reset
+        pedido.setEstado(PedidoPreparadoState.getInstance());
         assertTrue(pedido.getEstado().cancelar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoCanceladoState);
     }
@@ -70,7 +70,7 @@ class PedidoStateTest {
         assertTrue(pedido.getEstado().entregar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoEntregueState);
 
-        pedido.setEstado(PedidoEnviadoState.getInstance()); // reset
+        pedido.setEstado(PedidoEnviadoState.getInstance());
         assertTrue(pedido.getEstado().cancelar(pedido));
         assertTrue(pedido.getEstado() instanceof PedidoCanceladoState);
     }
